@@ -15,8 +15,13 @@ client.initialize();
 
 client.on('message', message => {
     console.log(message.body);
-	if(message.body === 'ping') {
+    if(message.body === 'ping') {
         console.log('receive ping')
 		message.reply('pong');
-	}
+	}else{
+        if(message.body) {
+            message.reply('👍');
+        }    
+    }
+    
 });
