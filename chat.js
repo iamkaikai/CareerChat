@@ -37,10 +37,14 @@ function getMeme(){
     return img;
 }
 
-function reminder(time){
+function reminder(time, day){
     setTimeout(()=>{
         const sent_to_id = '120363171196259711@g.us';
-        const message = `Don't forget to complete today's job search routine!`;
+        if (day === 'morning'){
+            const message = `Rise and grind, squad! 💪Let's secure that bag! 🎒 Remember to slide through those job apps today. 🚀 #HustleModeOn`;
+        }else{
+            const message = `Yo, evening check-in! 🌆 Still got that job search grind to hit or what? Don't let the dream job ghost ya. 💼 #SecureTheBag`;
+        }
         client.sendMessage(sent_to_id, message);
         client.sendMessage(sent_to_id, getMeme());
         reminder(time)
@@ -53,7 +57,8 @@ function reminder(time){
 
 client.on('ready', () => {
     console.log('Client is ready!');
-    reminder(9);
+    reminder(8, 'morning');
+    reminder(20, 'evening');
 });
 
 client.initialize();
