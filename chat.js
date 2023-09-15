@@ -15,17 +15,45 @@ client.on('qr', qr => {
 
 const meme_dir = './meme'
 const files = fs.readdirSync(meme_dir).filter(f => f !== '.DS_Store');
-console.log(files)
 if (files.length <= 0){
     console.log('no imgs in meme folder')
     return;
 }
 
+function getTime(targetHour){
+    const now = new Date();
+    const then = new Date(now);
+    then.setHours(targetHour, 0, 0, 0);
+    if (now.getTime() > then.getTime()){
+        then.setDate(now.getDate()+1);
+    }
+    return then.getTime() - now.getTime();
+}
+
+function getMeme(){
+    const randomFile = files[Math.floor(Math.random()*files.length)];
+    const meme_path = path.join(meme_dir, randomFile);
+    const img = MessageMedia.fromFilePath(meme_path);
+    return img;
+}
+
+function reminder(time){
+    setTimeout(()=>{
+        const sent_to_id = '120363171196259711@g.us';
+        const message = `Don't forget to complete today's job search routine!`;
+        client.sendMessage(sent_to_id, message);
+        client.sendMessage(sent_to_id, getMeme());
+        reminder(time)
+    }, getTime(time))
+}
+
+
+
+
+
 client.on('ready', () => {
     console.log('Client is ready!');
-    const sent_to_id = '19193570536@c.us';
-    const message = 'test message from bot!!';
-    client.sendMessage(sent_to_id, message);
+    reminder(9);
 });
 
 client.initialize();
@@ -37,16 +65,12 @@ client.on('message', message => {
     console.log(message.body);
     console.log('------------------')
 
-    if(message.body === 'ping') {
-        console.log('receive ping')
+    if(message.body.toLowerCase() === 'ping') {
 		message.reply('pong');
 	}
 
     if(message.body.toLowerCase() === 'meme'){
-        const randomFile = files[Math.floor(Math.random()*files.length)];
-        const meme_path = path.join(meme_dir, randomFile);
-        const img = MessageMedia.fromFilePath(meme_path)
-        message.reply(img);
+        message.reply(getMeme());
     }
     
 });
@@ -54,6 +78,4 @@ client.on('message', message => {
 // client.on('message_create', async (msg) => {
 //     console.log(msg);
 // })
-
-// author: '19193570536@c.us'
 // grace: '886979928343@c.us'
