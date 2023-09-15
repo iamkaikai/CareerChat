@@ -40,10 +40,13 @@ function getMeme(){
 function reminder(time, day){
     setTimeout(()=>{
         const sent_to_id = '120363171196259711@g.us';
+        let message;
         if (day === 'morning'){
-            const message = `Rise and grind, squad! 💪Let's secure that bag! 🎒 Remember to slide through those job apps today. 🚀 #HustleModeOn`;
+            message = `Rise and grind, squad! 💪Let's secure that bag! 🎒 Remember to slide through those job apps today. 🚀 #HustleModeOn`;
+        }else if(day === 'Soo'){
+            message = `Hey Soo! Time to rise, shine, and grind! 💪 Let's conquer those job apps today and move one step closer to our dreams. 🚀 Don't let the hustle fade. #SooGotThis 💼🎒`;
         }else{
-            const message = `Yo, evening check-in! 🌆 Still got that job search grind to hit or what? Don't let the dream job ghost ya. 💼 #SecureTheBag`;
+            message = `Yo, evening check-in! 🌆 Still got that job search grind to hit or what? Don't let the dream job ghost ya. 💼 #SecureTheBag`;
         }
         client.sendMessage(sent_to_id, message);
         client.sendMessage(sent_to_id, getMeme());
@@ -51,14 +54,12 @@ function reminder(time, day){
     }, getTime(time))
 }
 
-
-
-
-
+// main function
 client.on('ready', () => {
     console.log('Client is ready!');
     reminder(8, 'morning');
-    reminder(20, 'evening');
+    reminder(10, 'Soo');
+    reminder(19, 'evening');
 });
 
 client.initialize();
