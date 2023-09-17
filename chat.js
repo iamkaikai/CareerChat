@@ -43,6 +43,7 @@ function getJobs(day){
     if (day === 'today'){
         now = new Date();
     }else if (day === 'yesterday'){
+        now = new Date();
         now = new Date(now.getDate() - 1);
     }
     
@@ -84,7 +85,7 @@ function getJobs(day){
             const cleanedText = resultText.replace(/<br>/g, '\n');
 
             console.log(resultText);
-            resolve(resultText || "No jobs found for the selected date.");
+            resolve(resultText || "No jobs found for the selected date: ${now.toLocaleString('en-US')}");
         }).catch(error => {
             console.error('Error fetching the content:', error);
             reject("Error fetching the jobs.");
@@ -105,7 +106,7 @@ function reminder(time, day){
                 console.error('Error sending the jobs message:', err);
             }
         }else if(day === 'Soo'){
-            message = `Hey Soo! Time to rise, shine, and grind! 💪 Let's conquer those job apps today and move one step closer to our dreams. 🚀 Don't let the hustle fade. #SooGotThis 💼🎒`;
+            message = `Hey Soo! Let's conquer those job apps today and move one step closer to our dreams. 🚀 Don't let the hustle fade. #SooGotThis 💼🎒`;
         }else if(day === 'evening'){
             message = `Yo, evening check-in! 🌆 Still got that job search grind to hit or what? Don't let the dream job ghost ya. 💼 #SecureTheBag\n\n`;
             try{
@@ -116,7 +117,6 @@ function reminder(time, day){
                 console.error('Error sending the jobs message:', err);
             }    
         }
-        client.sendMessage(sent_to_id, message);
         client.sendMessage(sent_to_id, getMeme());
         reminder(time)
     }, getTime(time))
