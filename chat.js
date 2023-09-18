@@ -85,7 +85,7 @@ function getJobs(day){
             const cleanedText = resultText.replace(/<br>/g, '\n');
 
             console.log(resultText);
-            resolve(resultText || "No jobs found for the selected date: ${now.toLocaleString('en-US')}");
+            resolve(resultText || `No jobs found for the selected date: ${now.toLocaleString('en-US')}`);
         }).catch(error => {
             console.error('Error fetching the content:', error);
             reject("Error fetching the jobs.");
