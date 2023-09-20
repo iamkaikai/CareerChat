@@ -24,7 +24,7 @@ Welcome to CareerChat, a tool designed to help you stay on top of your job searc
 
 ## Usage
 
-1. Update the sent_to_id with the desired WhatsApp chat ID or group ID of the recipient.
+1. Update the `sent_to_id` with the desired WhatsApp chat ID or group ID of the recipient.
 2. Fill the `meme` directory with your favorite memes.
 3. Run the script:
    ```bash
