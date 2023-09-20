@@ -2,19 +2,10 @@ const qrcode = require('qrcode-terminal');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
-const { dir } = require('console');
-const client = new Client({
-    authStrategy: new LocalAuth()
-});
+const sent_to_id = '120363171196259711@g.us';       //change this to your personal What's app id that you want to receive the message
+const meme_dir = './meme'                           //where you put your memes 
 
-client.on('qr', qr => {
-    qrcode.generate(qr, {small: true});
-});
-
-
-const meme_dir = './meme'
 const files = fs.readdirSync(meme_dir).filter(f => f !== '.DS_Store');
 if (files.length <= 0){
     console.log('no imgs in meme folder')
@@ -40,14 +31,16 @@ function getMeme(){
 
 function getJobs(day){
     let now;
+    let oneDayInMillis = 24 * 60 * 60 * 1000;  // hours * minutes * seconds * milliseconds
+
     if (day === 'today'){
         now = new Date();
     }else if (day === 'yesterday'){
         now = new Date();
-        now = new Date(now.getDate() - 1);
+        now = new Date(now - oneDayInMillis);
     }
-    
-    // Function to format the current date to match the dateAdded format
+    console.log(now)
+
     function formatDate(date) {
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth()).padStart(2, '0'); // Months are 0-based
@@ -56,26 +49,17 @@ function getJobs(day){
     }
 
     const targetedDate = formatDate(now);
-    // console.log(targetedDate)
-
-    // Fetch the content using axios
+    
     return new Promise((resolve, reject)=>{
         axios.get('https://raw.githubusercontent.com/ReaVNaiL/New-Grad-2024/main/README.md')
         .then(response => {
             const data = response.data;
-
-            // Extract the section under '## Jobs'
             const jobsSection = data.split('## Jobs')[1].split('-END OF LIST-')[0].trim();
-            
-            // Split the section into rows
             const rows = jobsSection.split('\n').filter(row => row.startsWith('| ['));
-            
-            // Convert each row into an object
             const jobs = rows.map(row => {
                 const [name, location, roles, requirements, dateAdded] = row.split('|').slice(1, -1).map(cell => cell.trim());
                 return { name, location, roles, requirements, dateAdded };
             });
-
             let resultText = '';
             for (const job of jobs){
                 if (job.dateAdded === targetedDate) {
@@ -83,7 +67,7 @@ function getJobs(day){
                 }
             }
             const cleanedText = resultText.replace(/<br>/g, '\n');
-
+            console.log(now.toLocaleString('en-US'))
             console.log(resultText);
             resolve(resultText || `No jobs found for the selected date: ${now.toLocaleString('en-US')}`);
         }).catch(error => {
@@ -95,7 +79,6 @@ function getJobs(day){
 
 function reminder(time, day){
     setTimeout(async ()=>{
-        const sent_to_id = '120363171196259711@g.us';
         let message;
         if (day === 'morning'){
             message = `Rise and grind, squad! 💪Let's secure that bag! 🎒 Remember to slide through those job apps today. 🚀 #HustleModeOn\n\n`;
@@ -105,8 +88,6 @@ function reminder(time, day){
             } catch (err) {
                 console.error('Error sending the jobs message:', err);
             }
-        }else if(day === 'Soo'){
-            message = `Hey Soo! Let's conquer those job apps today and move one step closer to our dreams. 🚀 Don't let the hustle fade. #SooGotThis 💼🎒`;
         }else if(day === 'evening'){
             message = `Yo, evening check-in! 🌆 Still got that job search grind to hit or what? Don't let the dream job ghost ya. 💼 #SecureTheBag\n\n`;
             try{
@@ -122,34 +103,32 @@ function reminder(time, day){
     }, getTime(time))
 }
 
-// main function
+// main functions of What's-app-web.js
+const client = new Client({
+    authStrategy: new LocalAuth()
+});
+// generate qr code to login via this js service
+client.on('qr', qr => {
+    qrcode.generate(qr, {small: true});
+});
+// call the reminder functions
 client.on('ready', () => {
     console.log('Client is ready!');
-    reminder(8, 'morning');
-    reminder(10, 'Soo');
-    reminder(20, 'evening');
+    reminder(21, 'morning');
+    reminder(12, null);
+    // reminder(20, 'evening');
 });
 
 client.initialize();
-
 client.on('message', message => {
-    
     console.log('------------------')
     console.log(message.from);
     console.log(message.body);
     console.log('------------------')
-
     if(message.body.toLowerCase() === 'ping') {
 		message.reply('pong');
 	}
-
     if(message.body.toLowerCase() === 'meme'){
         message.reply(getMeme());
     }
-    
 });
-
-// client.on('message_create', async (msg) => {
-//     console.log(msg);
-// })
-// grace: '886979928343@c.us'
