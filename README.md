@@ -24,20 +24,24 @@ Welcome to CareerChat, a tool designed to help you stay on top of your job searc
 
 ## Usage
 
-1. Run the script:
+1. Update the sent_to_id with the desired WhatsApp chat ID or group ID of the recipient.
+2. Fill the `meme` directory with your favorite memes.
+3. Run the script:
    ```bash
-   node <your_script_name>.js
+   node chat.js
    ```
 
-2. Scan the QR code using WhatsApp on your phone to authenticate.
+4. Scan the QR code using WhatsApp on your phone to authenticate.
 
-3. Wait for the reminders to roll in and keep your job search game strong!
+5. Wait for the reminders to roll in and keep your job search game strong!
 
 ## Features
 
 - **Daily Job Reminders**: Get daily job listings directly from [New-Grad-2024](https://github.com/ReaVNaiL/New-Grad-2024) to keep you updated.
 - **Meme Boost**: Receive random memes from your meme directory to lighten up your day.
 - **Customizable**: Set your own WhatsApp ID to receive messages and customize the meme directory.
+- **Schedule**: The tool sends job updates twice daily - 8 AM for yesterday's listings and 8 PM for today's. Plus, enjoy a meme break in the afternoon!
+
 
 ## Contributing
 
