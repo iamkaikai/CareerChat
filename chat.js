@@ -31,8 +31,7 @@ function getMeme(){
 
 function getJobs(day){
     let now;
-    let oneDayInMillis = 24 * 60 * 60 * 1000;  // hours * minutes * seconds * milliseconds
-
+    let oneDayInMillis = 24 * 60 * 60 * 1000;
     if (day === 'today'){
         now = new Date();
     }else if (day === 'yesterday'){
@@ -114,9 +113,9 @@ client.on('qr', qr => {
 // call the reminder functions
 client.on('ready', () => {
     console.log('Client is ready!');
-    reminder(21, 'morning');
+    reminder(8, 'morning');
     reminder(12, null);
-    // reminder(20, 'evening');
+    reminder(20, 'evening');
 });
 
 client.initialize();
