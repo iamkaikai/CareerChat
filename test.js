@@ -61,7 +61,7 @@ function getJobs(day){
                     resultText += `${job.name} in ${job.location} \nfor role ${job.roles}. \nRequirements: ${job.requirements}. \nDate Added: ${job.dateAdded}\n\n`;
                 }
             }
-            const cleanedText = resultText.replace(/<br>/g, '\n');
+            const cleanedText = resultText.replace(/<br>/g, '\n').replace(/<img[^>]*>/g, '');
 
             resolve(cleanedText || `No jobs found for the selected date: ${now.toLocaleString('en-US')}`);
         }).catch(error => {
