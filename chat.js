@@ -2,24 +2,15 @@ const qrcode = require('qrcode-terminal');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
-const sent_to_id = '120363171196259711@g.us';       //change this to your personal What's app id that you want to receive the message
+const { Client, LocalAuth, MessageMedia, LegacySessionAuth } = require('whatsapp-web.js');
+// const sent_to_id = '120363171196259711@g.us';       //change this to your personal What's app id that you want to receive the message
+const sent_to_id = '886979928343@c.us';       //change this to your personal What's app id that you want to receive the message
 const meme_dir = './meme'                           //where you put your memes 
 
 const files = fs.readdirSync(meme_dir).filter(f => f !== '.DS_Store');
 if (files.length <= 0){
     console.log('no imgs in meme folder')
     return;
-}
-
-function getTime(targetHour){
-    const now = new Date();
-    const then = new Date(now);
-    then.setHours(targetHour, 0, 0, 0);
-    if (now.getTime() > then.getTime()){
-        then.setDate(now.getDate()+1);
-    }
-    return then.getTime() - now.getTime();
 }
 
 function getMeme(){
@@ -37,6 +28,17 @@ function convertDateFormat(dateStr) {
     const formattedDay = String(day).padStart(2, '0');
     const year = 2023
     return `${formattedMonth}/${formattedDay}/${year}`;
+}
+
+
+function getTime(targetHour){
+    const now = new Date();
+    const then = new Date(now);
+    then.setHours(targetHour, 0, 0, 0);             /////////////////////////////////////
+    if (now.getTime() > then.getTime()){
+        then.setDate(now.getDate()+1);
+    }
+    return then.getTime() - now.getTime();
 }
 
 // main functions of What's-app-web.js
@@ -62,7 +64,22 @@ function getJobs(day){
         now = new Date(now - oneWeekInMillis);
     }
 
+    console.log(now.toLocaleString('en-US'))
+
     function formatDate(date) {
+        if (typeof date == "string"){ 
+            date = new Date(date);
+            if (isNaN(date.getTime())) { // check if date is invalid
+                console.error('Invalid date string:', date);
+                return;
+            }
+        }
+    
+        if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+            console.error('Invalid date:', date);
+            return;
+        }
+
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth()+1).padStart(2, '0'); // Months are 0-based
         const year = date.getFullYear();
@@ -84,6 +101,7 @@ function getJobs(day){
             const rows1 = data1.split('\n').filter(row => row.startsWith('| ['));
             const jobs1 = rows1.map(row => {
                 const [name, location, roles, requirements, dateAdded] = row.split('|').slice(1, -1).map(cell => cell.trim());
+                console.log(dateAdded)
                 return { name, location, roles, requirements, dateAdded };
             });
             jobs = jobs.concat(jobs1);
@@ -95,10 +113,18 @@ function getJobs(day){
                 const [company, role, location, applicationLink, datePosted] = row.split('|').slice(1, -1).map(cell => cell.trim());   
                 return { name: company, location, roles: role, requirements: applicationLink, dateAdded:  convertDateFormat(datePosted) };
             });
-            jobs = jobs.concat(jobs2);
+            jobs = jobs.concat(jobs2);           
             
             let resultText = '';
             for (const job of jobs){
+                // console.log(`job.dateAdded = ${job.dateAdded}`)
+                // console.log(`formatDate(now) = ${formatDate(now)}`)
+                // console.log(`job.dateAdded >= formatDate(now) = ${job.dateAdded >= formatDate(now)}`)
+                // console.log('>')
+                // job.dateAdded = formatDate(job.dateAdded)
+                // console.log(`job.dateAdded = ${job.dateAdded}`)
+                // console.log(`job.dateAdded >= formatDate(now) = ${job.dateAdded >= formatDate(now)}`)
+                // console.log('------------------------------')
                 if (job.dateAdded >= formatDate(now)) {
                     resultText += `${job.name} in ${job.location} \nfor role ${job.roles}. \nRequirements: ${job.requirements}. \nDate Added: ${job.dateAdded}\n\n`;
                 }
