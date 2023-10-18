@@ -3,9 +3,10 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 const { Client, LocalAuth, MessageMedia, LegacySessionAuth } = require('whatsapp-web.js');
-// const sent_to_id = '120363171196259711@g.us';       //change this to your personal What's app id that you want to receive the message
-const sent_to_id = '886979928343@c.us';       //change this to your personal What's app id that you want to receive the message
-const meme_dir = './meme'                           //where you put your memes 
+const sent_to_id = '120363171196259711@g.us';        //change this to your personal What's app id that you want to receive the message
+const meme_dir = './meme';                              //where you put your memes 
+const min = 48;
+const sec = 0;
 
 const files = fs.readdirSync(meme_dir).filter(f => f !== '.DS_Store');
 if (files.length <= 0){
@@ -34,7 +35,7 @@ function convertDateFormat(dateStr) {
 function getTime(targetHour){
     const now = new Date();
     const then = new Date(now);
-    then.setHours(targetHour, 0, 0, 0);             /////////////////////////////////////
+    then.setHours(targetHour, min, sec, 0);                 /////////////////////////////////////
     if (now.getTime() > then.getTime()){
         then.setDate(now.getDate()+1);
     }
@@ -43,7 +44,7 @@ function getTime(targetHour){
 
 // main functions of What's-app-web.js
 const client = new Client({
-    // authStrategy: new LocalAuth()
+    authStrategy: new LocalAuth()
 });
 // generate qr code to login via this js service
 client.on('qr', qr => {
@@ -52,7 +53,7 @@ client.on('qr', qr => {
 
 function getJobs(day){
     let now;
-    let oneDayInMillis = 24 * 60 * 60 * 1000;
+    let oneDayInMillis = 24 * 60 * 60 * 1000;               /////////////////////////////////////    
     let oneWeekInMillis = 24 * 60 * 60 * 1000 * 7;
     if (day === 'today'){
         now = new Date();
@@ -95,13 +96,13 @@ function getJobs(day){
             axios.get('https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/README.md')
         ]).then(responses => {
             let jobs = [];
+            const datePattern = /^\d{2}\/\d{2}\/\d{4}$/;    //format check for parsed date
 
             // Process the first response
             const data1 = responses[0].data.split('## Jobs')[1].split('-END OF LIST-')[0].trim();
             const rows1 = data1.split('\n').filter(row => row.startsWith('| ['));
             const jobs1 = rows1.map(row => {
                 const [name, location, roles, requirements, dateAdded] = row.split('|').slice(1, -1).map(cell => cell.trim());
-                console.log(dateAdded)
                 return { name, location, roles, requirements, dateAdded };
             });
             jobs = jobs.concat(jobs1);
@@ -117,15 +118,7 @@ function getJobs(day){
             
             let resultText = '';
             for (const job of jobs){
-                // console.log(`job.dateAdded = ${job.dateAdded}`)
-                // console.log(`formatDate(now) = ${formatDate(now)}`)
-                // console.log(`job.dateAdded >= formatDate(now) = ${job.dateAdded >= formatDate(now)}`)
-                // console.log('>')
-                // job.dateAdded = formatDate(job.dateAdded)
-                // console.log(`job.dateAdded = ${job.dateAdded}`)
-                // console.log(`job.dateAdded >= formatDate(now) = ${job.dateAdded >= formatDate(now)}`)
-                // console.log('------------------------------')
-                if (job.dateAdded >= formatDate(now)) {
+                if (job.dateAdded >= formatDate(now) && datePattern.test(job.dateAdded)) {
                     resultText += `${job.name} in ${job.location} \nfor role ${job.roles}. \nRequirements: ${job.requirements}. \nDate Added: ${job.dateAdded}\n\n`;
                 }
             }
@@ -146,7 +139,8 @@ function reminder(time, note){
             message = `Rise and grind, squad! 💪Let's secure that bag! 🎒 Remember to slide through those job apps today. 🚀 #HustleModeOn\n\n`;
             try {
                 const jobsMessage = await getJobs('yesterday');
-                client.sendMessage(sent_to_id, message + jobsMessage);
+                console.log(jobsMessage);
+                // client.sendMessage(sent_to_id, message + jobsMessage);
             } catch (err) {
                 console.error('Error sending the jobs message:', err);
             }
@@ -154,7 +148,7 @@ function reminder(time, note){
             message = `Yo, evening check-in! 🌆 Still got that job search grind to hit or what? Don't let the dream job ghost ya. 💼 #SecureTheBag\n\n`;
             try{
                 const jobsMessage = await getJobs('today');
-                client.sendMessage(sent_to_id, message + jobsMessage);
+                // client.sendMessage(sent_to_id, message + jobsMessage);
     
             } catch(err){
                 console.error('Error sending the jobs message:', err);
@@ -163,7 +157,7 @@ function reminder(time, note){
             message = `Weekly check-in bro! 🤙 Wake the F up! Here are the jobs listed in the past week. 🔥 #SecureTheBag\n\n`;
             try{
                 const jobsMessage = await getJobs('week');
-                client.sendMessage(sent_to_id, message + jobsMessage);
+                // client.sendMessage(sent_to_id, message + jobsMessage);
     
             } catch(err){
                 console.error('Error sending the jobs message:', err);
@@ -179,10 +173,10 @@ function reminder(time, note){
 // call the reminder functions
 client.on('ready', () => {
     console.log('Client is ready!');
-    reminder(8, 'morning');
-    reminder(12, null);
+    reminder(13, 'morning');
+    // reminder(12, null);
     reminder(20, 'evening');
-    reminder(13, 'weekly wrap up')
+    // reminder(13, 'weekly wrap up')
 });
 
 client.initialize();
