@@ -2,11 +2,13 @@ const qrcode = require('qrcode-terminal');
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const { Client, LocalAuth, MessageMedia, LegacySessionAuth } = require('whatsapp-web.js');
+const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 const sent_to_id = '120363171196259711@g.us';        //change this to your personal What's app id that you want to receive the message
 const meme_dir = './meme';                              //where you put your memes 
-const min = 48;
+const min = 0;
 const sec = 0;
+
+console.log('CareerChat initialized!')
 
 const files = fs.readdirSync(meme_dir).filter(f => f !== '.DS_Store');
 if (files.length <= 0){
@@ -139,8 +141,7 @@ function reminder(time, note){
             message = `Rise and grind, squad! 💪Let's secure that bag! 🎒 Remember to slide through those job apps today. 🚀 #HustleModeOn\n\n`;
             try {
                 const jobsMessage = await getJobs('yesterday');
-                console.log(jobsMessage);
-                // client.sendMessage(sent_to_id, message + jobsMessage);
+                client.sendMessage(sent_to_id, message + jobsMessage);
             } catch (err) {
                 console.error('Error sending the jobs message:', err);
             }
@@ -148,7 +149,7 @@ function reminder(time, note){
             message = `Yo, evening check-in! 🌆 Still got that job search grind to hit or what? Don't let the dream job ghost ya. 💼 #SecureTheBag\n\n`;
             try{
                 const jobsMessage = await getJobs('today');
-                // client.sendMessage(sent_to_id, message + jobsMessage);
+                client.sendMessage(sent_to_id, message + jobsMessage);
     
             } catch(err){
                 console.error('Error sending the jobs message:', err);
@@ -157,7 +158,7 @@ function reminder(time, note){
             message = `Weekly check-in bro! 🤙 Wake the F up! Here are the jobs listed in the past week. 🔥 #SecureTheBag\n\n`;
             try{
                 const jobsMessage = await getJobs('week');
-                // client.sendMessage(sent_to_id, message + jobsMessage);
+                client.sendMessage(sent_to_id, message + jobsMessage);
     
             } catch(err){
                 console.error('Error sending the jobs message:', err);
@@ -174,7 +175,7 @@ function reminder(time, note){
 client.on('ready', () => {
     console.log('Client is ready!');
     reminder(13, 'morning');
-    // reminder(12, null);
+    reminder(12, null);
     reminder(20, 'evening');
     // reminder(13, 'weekly wrap up')
 });
