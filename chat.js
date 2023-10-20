@@ -150,7 +150,6 @@ function reminder(time, note){
             try{
                 const jobsMessage = await getJobs('today');
                 client.sendMessage(sent_to_id, message + jobsMessage);
-    
             } catch(err){
                 console.error('Error sending the jobs message:', err);
             }    
@@ -159,13 +158,12 @@ function reminder(time, note){
             try{
                 const jobsMessage = await getJobs('week');
                 client.sendMessage(sent_to_id, message + jobsMessage);
-    
             } catch(err){
                 console.error('Error sending the jobs message:', err);
             }    
         }
         client.sendMessage(sent_to_id, getMeme());
-        reminder(time)
+        reminder(time, note)
         console.log('message sent!')
     }, getTime(time))
 }
@@ -174,10 +172,10 @@ function reminder(time, note){
 // call the reminder functions
 client.on('ready', () => {
     console.log('Client is ready!');
-    reminder(13, 'morning');
-    reminder(12, null);
+    reminder(8, 'morning');
+    reminder(13, null);
     reminder(20, 'evening');
-    // reminder(13, 'weekly wrap up')
+    reminder(14, 'weekly wrap up')
 });
 
 client.initialize();
