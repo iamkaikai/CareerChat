@@ -4,11 +4,11 @@ const path = require('path');
 const axios = require('axios');
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
 const sent_to_id = '120363171196259711@g.us';        //change this to your personal What's app id that you want to receive the message
-const meme_dir = './meme';                              //where you put your memes 
+const meme_dir = './meme';                           //where you put your memes 
 const min = 0;
 const sec = 0;
 
-console.log('CareerChat initialized!')
+console.log('CareerChat initialized! v2')
 
 const files = fs.readdirSync(meme_dir).filter(f => f !== '.DS_Store');
 if (files.length <= 0){
@@ -95,7 +95,8 @@ function getJobs(day){
         // Fetch data from both links concurrently
         Promise.all([
             axios.get('https://raw.githubusercontent.com/ReaVNaiL/New-Grad-2024/main/README.md'),
-            axios.get('https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/README.md')
+            axios.get('https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/README.md'),
+            axios.get('https://raw.githubusercontent.com/SimplifyJobs/Summer2024-Internships/dev/README.md')
         ]).then(responses => {
             let jobs = [];
             const datePattern = /^\d{2}\/\d{2}\/\d{4}$/;    //format check for parsed date
