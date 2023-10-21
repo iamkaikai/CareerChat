@@ -138,7 +138,7 @@ function reminder(time, note){
     setTimeout(async ()=>{
         let message;
         if (note === 'morning'){
-            message = `Rise and grind, squad! 💪Let's secure that bag! 🎒 Remember to slide through those job apps today. 🚀 #HustleModeOn\n\n`;
+            message = `Rise and grind, squad! 💪Let's secure that bag! 🎒 Remember to slide through those job apps today. 🚀 #HustleModeOn\n\nHere are the jobs found yesterday:\n`;
             try {
                 const jobsMessage = await getJobs('yesterday');
                 client.sendMessage(sent_to_id, message + jobsMessage);
@@ -146,7 +146,7 @@ function reminder(time, note){
                 console.error('Error sending the jobs message:', err);
             }
         }else if(note === 'evening'){
-            message = `Yo, evening check-in! 🌆 Still got that job search grind to hit or what? Don't let the dream job ghost ya. 💼 #SecureTheBag\n\n`;
+            message = `Yo, evening check-in! 🌆 Still got that job search grind to hit or what? Don't let the dream job ghost ya. 💼 #SecureTheBag\n\nHere are the jobs found today:\n`;
             try{
                 const jobsMessage = await getJobs('today');
                 client.sendMessage(sent_to_id, message + jobsMessage);
