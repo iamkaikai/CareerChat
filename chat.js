@@ -8,7 +8,7 @@ const meme_dir = './meme';                           //where you put your memes
 const min = 0;
 const sec = 0;
 
-console.log('CareerChat initialized! v4')
+console.log('CareerChat initialized! v5')
 
 const files = fs.readdirSync(meme_dir).filter(f => f !== '.DS_Store');
 if (files.length <= 0){
@@ -34,12 +34,16 @@ function convertDateFormat(dateStr) {
 }
 
 
-function getTime(targetHour){
+function getTime(targetHour, mode){
     const now = new Date();
     const then = new Date(now);
-    then.setHours(targetHour, min, sec, 0);                 /////////////////////////////////////
+    then.setHours(targetHour, min, sec, 0);
     if (now.getTime() > then.getTime()){
-        then.setDate(now.getDate()+1);
+        if(mode == "weekly wrap up"){
+            then.setDate(now.getDate()+7);      // add seven days after
+        }else{
+            then.setDate(now.getDate()+1);      // add one day after
+        }
     }
     return then.getTime() - now.getTime();
 }
@@ -146,10 +150,10 @@ function getJobs(day){
     })
 }
 
-function reminder(time, note){
+function reminder(time, mode){
     setTimeout(async ()=>{
         let message;
-        if (note === 'morning'){
+        if (mode === 'morning'){
             message = `Rise and grind, squad! 💪Let's secure that bag! 🎒 Remember to slide through those job apps today. 🚀 #HustleModeOn\n\nHere are the jobs found yesterday:\n`;
             try {
                 const jobsMessage = await getJobs('yesterday');
@@ -157,7 +161,7 @@ function reminder(time, note){
             } catch (err) {
                 console.error('Error sending the jobs message:', err);
             }
-        }else if(note === 'evening'){
+        }else if(mode === 'evening'){
             message = `Yo, evening check-in! 🌆 Still got that job search grind to hit or what? Don't let the dream job ghost ya. 💼 #SecureTheBag\n\nHere are the jobs found today:\n`;
             try{
                 const jobsMessage = await getJobs('today');
@@ -165,7 +169,7 @@ function reminder(time, note){
             } catch(err){
                 console.error('Error sending the jobs message:', err);
             }    
-        }else if(note === 'weekly wrap up'){
+        }else if(mode === 'weekly wrap up'){
             message = `Weekly check-in bro! 🤙 Wake the F up! Here are the jobs listed in the past week. 🔥 #SecureTheBag\n\n`;
             try{
                 const jobsMessage = await getJobs('week');
@@ -175,9 +179,9 @@ function reminder(time, note){
             }    
         }
         client.sendMessage(sent_to_id, getMeme());
-        reminder(time, note)
+        reminder(time, mode)
         console.log('message sent!')
-    }, getTime(time))
+    }, getTime(time, mode))
 }
 
 
@@ -186,7 +190,7 @@ client.on('ready', () => {
     console.log('Client is ready!');
     reminder(8, 'morning');
     reminder(13, null);
-    reminder(21, 'evening');
+    reminder(20, 'evening');
     reminder(14, 'weekly wrap up')
 });
 
