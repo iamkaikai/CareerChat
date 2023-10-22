@@ -37,7 +37,7 @@ Welcome to CareerChat, a tool designed to help you stay on top of your job searc
 
 ## Features
 
-- **Daily Job Reminders**: Get daily job listings directly from [New-Grad-2024](https://github.com/ReaVNaiL/New-Grad-2024) to keep you updated.
+- **Daily Job Reminders**: Get daily job listings directly from [ReaVNaiL/New-Grad-2024](https://github.com/ReaVNaiL/New-Grad-2024), [2024 New Grad Positions by Coder Quad and Simplify](https://github.com/SimplifyJobs/New-Grad-Positions/), and [Summer 2024 Tech Internships by Pitt CSC & Simplify](https://github.com/SimplifyJobs/Summer2024-Internships) to keep you updated.
 - **Meme Boost**: Receive random memes from your meme directory to lighten up your day.
 - **Customizable**: Set your own WhatsApp ID to receive messages and customize the meme directory.
 - **Schedule**: The tool sends job updates twice daily - 8 AM for yesterday's listings and 8 PM for today's. Plus, enjoy a meme break in the afternoon!
