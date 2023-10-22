@@ -39,7 +39,7 @@ function getTime(targetHour, mode){
     const then = new Date(now);
     then.setHours(targetHour, min, sec, 0);
     if (now.getTime() > then.getTime()){
-        if(mode == "weekly wrap up"){
+        if(mode === "weekly wrap up"){
             then.setDate(now.getDate()+7);      // add seven days after
         }else{
             then.setDate(now.getDate()+1);      // add one day after
