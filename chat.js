@@ -8,7 +8,7 @@ const meme_dir = './meme';                           //where you put your memes
 const min = 0;
 const sec = 0;
 
-console.log('CareerChat initialized! v2')
+console.log('CareerChat initialized! v4')
 
 const files = fs.readdirSync(meme_dir).filter(f => f !== '.DS_Store');
 if (files.length <= 0){
@@ -94,9 +94,9 @@ function getJobs(day){
     return new Promise((resolve, reject)=>{
         // Fetch data from both links concurrently
         Promise.all([
-            axios.get('https://raw.githubusercontent.com/ReaVNaiL/New-Grad-2024/main/README.md'),
-            axios.get('https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/README.md'),
-            axios.get('https://raw.githubusercontent.com/SimplifyJobs/Summer2024-Internships/dev/README.md')
+            axios.get('https://raw.githubusercontent.com/ReaVNaiL/New-Grad-2024/main/README.md'),               // first request
+            axios.get('https://raw.githubusercontent.com/SimplifyJobs/New-Grad-Positions/dev/README.md'),       // second request
+            axios.get('https://raw.githubusercontent.com/SimplifyJobs/Summer2024-Internships/dev/README.md')    // third request
         ]).then(responses => {
             let jobs = [];
             const datePattern = /^\d{2}\/\d{2}\/\d{4}$/;    //format check for parsed date
@@ -117,7 +117,18 @@ function getJobs(day){
                 const [company, role, location, applicationLink, datePosted] = row.split('|').slice(1, -1).map(cell => cell.trim());   
                 return { name: company, location, roles: role, requirements: applicationLink, dateAdded:  convertDateFormat(datePosted) };
             });
-            jobs = jobs.concat(jobs2);           
+
+            // Process the third response
+            
+            const data3 = responses[2].data.split('| ------- | ---- | -------- | ---------------- | ----------- |')[1].split('<!-- Please leave a one line gap between this and the table TABLE_END (DO NOT CHANGE THIS LINE) -->')[0].trim();
+            const rows3 = data3.split('\n').filter(row => row.startsWith('| **['));
+            const jobs3 = rows3.map(row => {
+                const [company, role, location, applicationLink, datePosted] = row.split('|').slice(1, -1).map(cell => cell.trim());   
+                return { name: company, location, roles: role, requirements: applicationLink, dateAdded:  convertDateFormat(datePosted) };
+            });
+
+            jobs = jobs.concat(jobs2);
+            jobs = jobs.concat(jobs3);           
             
             let resultText = '';
             for (const job of jobs){
@@ -175,7 +186,7 @@ client.on('ready', () => {
     console.log('Client is ready!');
     reminder(8, 'morning');
     reminder(13, null);
-    reminder(20, 'evening');
+    reminder(21, 'evening');
     reminder(14, 'weekly wrap up')
 });
 
