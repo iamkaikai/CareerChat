@@ -189,7 +189,7 @@ function reminder(time, mode){
 client.on('ready', () => {
     console.log('Client is ready!');
     reminder(8, 'morning');
-    reminder(13, null);
+    // reminder(13, null);
     reminder(20, 'evening');
     reminder(14, 'weekly wrap up')
 });
