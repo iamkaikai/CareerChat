@@ -142,7 +142,7 @@ function getJobs(day){
             }
             const cleanedText = resultText.replace(/<br>/g, '\n').replace(/<img[^>]*>/g, '');
 
-            resolve(cleanedText || `No jobs found for the selected date: ${now.toLocaleString('en-US')}`);
+            resolve(cleanedText || `No jobs found for the selected date:\n ${now.toLocaleString('en-US')}`);
         }).catch(error => {
             console.error('Error fetching the content:', error);
             reject("Error fetching the jobs.");
